@@ -20,9 +20,9 @@ $$
 
 We are only optimizing **ELBO (Evidence Lower BOund)** that depends on $\theta$.
 
-$$
+```math
 KL(q(z)||p(z|x)) = \int{q(z)log(\frac{p(z|x)}{q(z)})} \newline \int{q(z)log(p(z|x) - \int{q(z)log(q(z))}}  = \newline \mathbb{E}_{q\approx z} [log(q(z)] -\mathbb{E}_{q\approx z} [log(p(z|x)]
-$$
+```
 
 
 note that here we the formula of **Math Expectation of Random Variable**
@@ -35,9 +35,9 @@ Where f(z) is the function we want to weight in this case it can represent both 
 
 Finally we have this: 
 
-$$
+```math
 \mathbb{E}_{q\approx z} [log(q(z)] - \mathbb{E}_{q\approx z} [log(p(z|x)]
-$$
+```
 
 [Bayes’ theorem](https://en.wikipedia.org/wiki/Bayes%27_theorem):
 
@@ -49,23 +49,23 @@ And we can apply [Bayes’ theorem](https://en.wikipedia.org/wiki/Bayes%27_theor
 
  
 
-$$
-\mathbb{E}_{q\approx z} [log(q(z)] - \mathbb{E}_{q\approx z} [log(\frac{p(x|z)p(z)}{p(x)})] = \newline = \mathbb{E}_{q\approx z} [log(q(z)] - \mathbb{E}_{q\approx z} [log(p(x|z)p(z))] + log(p(x))
-$$
+```math
+\mathbb{E}_{q\approx z} [log(q(z)] - \mathbb{E}_{q\approx z} [log(\frac{p(x|z)p(z)}{p(x)})] = \newline = \mathbb{E}_{q\approx z} [log(q(z)] - \mathbb{E}_{q\approx z}[log(p(x|z)p(z))] + log(p(x))
+```
 
 So, it’s important to note that $log(p(x))$  doesn’t change, so we can just ignore it.
 
 Finally:
 
-$$
+```math
 KL(q(z)||p(z|x)) = \mathbb{E}_{q\approx z} [log(q(z)] - \mathbb{E}_{q\approx z} [log(p(x|z)p(z))]
-$$
+```
 
 Minimising KL divergence is equal to maximising the ELBO
 
-$$
+```math
 ELBO = -KL = \mathbb{E}_{z \approx q_{\theta}(z)} [log(p(x|z)p(z))- log(q_{\theta}(z))]
-$$
+```
 
 We can apply gradient or coordinate VI to maximise ELBO
 
@@ -73,9 +73,9 @@ We can apply gradient or coordinate VI to maximise ELBO
 
 But Authors wanted more general purpose algorithm based on SGB, for this reason we need to compute gradient of ELBO: 
 
-$$
+```math
 \nabla_{\theta}\mathbb{E}_{z \approx q_{\theta}(z)} [log(p(x|z)p(z))- log(q_{\theta}(z))] = \newline = \nabla_{\theta} \int q_{\theta}(z)[log(p(x|z)p(z))- log(q_{\theta}(z)]dz 
-$$
+```
 
 how can we push gradient into integral? 
 Let’s apply Leibniz’s Rule: 
@@ -116,11 +116,11 @@ $$
 
 after all the simplification:
 
-$$
+```math
 \int \nabla_{\theta}q_{\theta}(z)[log(p(x|z)p(z))- log(q_{\theta}(z))]dz + \newline +  \int \nabla_{\theta}log(q_{\theta}(z))q_{\theta}(z)dz =  \newline
 \int \nabla_{\theta}q_{\theta}(z)[log(p(x|z)p(z))- log(q_{\theta}(z))]dz =  \newline
 \int \nabla_{\theta}log(q_{\theta})q_{\theta}(z) [log(p(x|z)p(z))- log(q_{\theta}(z))]dz \approx \newline \approx \nabla_{\theta}\mathbb{E}_{z \approx q_{\theta}(z)} [log(p(x|z)p(z))- log(q_{\theta}(z))] = \newline \frac{1}{L}\sum_{l=1}^{L}{log(p(x|z_l)p(z_l))- log(q_{\theta}(z_l))}
-$$
+```
 
 But the problem is that this gradient have high variance and are useless.
 
@@ -131,9 +131,9 @@ So the deconstructed $q_{\theta}(z)$  to some standart distribution that does no
 - $\epsilon \approx p'(\epsilon)$
 - $z = g_{\theta}(\epsilon, x)$
 
-$$
+```math
 \nabla_{\theta}\mathbb{E}_{z \approx q_{\theta}(z)} [log(p(x|z)p(z))- log(q_{\theta}(z))] = \newline = \nabla_{\theta}\mathbb{E}_{p'} [log(p(x|g_{\theta}(\epsilon, x))p(g_{\theta}(\epsilon, x)))- log(q_{\theta}(g_{\theta}(\epsilon, x)))] \newline \approx \nabla_{\theta}\sum_{l}^{L} [log(p(x|g_{\theta}(\epsilon_l, x))p(g_{\theta}(\epsilon_l, x)))- log(q_{\theta}(g_{\theta}(\epsilon_l, x)))]
-$$
+```
 
 When can we use reparameterization trick?
 
@@ -141,9 +141,9 @@ When can we use reparameterization trick?
     
     we have a Normal Distributions, lets write $z$ as: 
     
-    $$
-    X(z) = \sigma^2 * z + \mu \approx \N(\mu, \sigma^2)
-    $$
+    
+    $X(z) = \sigma^2 * z + \mu \approx \N(\mu, \sigma^2)$
+    
     
 
 - When we have tractable CDF that we can invert
