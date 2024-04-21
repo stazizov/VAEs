@@ -1,5 +1,7 @@
 # vae_flax
 
+### readme in progress
+
 # Variational Inference
 
 By using variational inference we are trying to approximate hard to compute:
