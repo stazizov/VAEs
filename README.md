@@ -1,5 +1,3 @@
-# vae_flax
-
 ### readme in progress
 
 # Variational Inference
